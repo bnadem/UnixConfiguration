@@ -47,7 +47,46 @@ change is not only for developer, given birth to a build
 develeper want to be confident , ther code is in a good state
 
 
-commit frequently=>change are availabel every body 
+commit frequently=>change are availabel every body, mere are always small and namanageable 
 
+to resolve this dilemma is to create a separate branch for new frequently 
+1-integration proble only by merge with new functionality
+2- several developer create branches, problem increases and morge become complex
+3- automated merged tool, don't solve semantics conflcts.
+one rename methode in oe branch, other add new call from other branch
+4- hard to refactor the codebase
+
+better is to develop new feature incrementally and commti to trunk
+benefit:softwar working and integrated all time
+
+Using Meaningful Commit Messgaes
+warum addiet, deleted, umbenned, zeit.
+Managin dependencies:
+===============================
+
+
+Manging External Librarieods
+===============================
+most binary form, unless inerpreted language
+normal installed in global system by package Ruby Gems, Perl
+
+recommended copies external libraries somewhere local
+ability to reporduce offline your build
+add on repository bigger and checkoud longer
+Manging Componets
+==============================
+split applicatio into components
+to build into separate pipeline
+important to have binary dependencies between pipeline
+better thn source dependencies
+Managing Software configuration
+==============================
+configuration the behavior of software at build time, deploy time, and run time
+DELIVERY TEAMS
+ 
+configuration and flexibility
+==============================
+In our experience, it is an enduring myth that configuration information is
+somehow less risky to change than source code
 
 

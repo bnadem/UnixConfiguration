@@ -89,4 +89,58 @@ configuration and flexibility
 In our experience, it is an enduring myth that configuration information is
 somehow less risky to change than source code
 
+configuration less risky than source code
+
+
+
+1.It frequently leads to analysis paralysis, in which the problem seems so big
+and so intractable that the team spends all of their time thinking about how
+to solve it and none of their time actually solving anything.
+2. The system becomes so complex to configure that many of the benefits of
+its flexibility are lost, to the extent where the effort involved in its
+configuration is comparable to the cost of custom development.
+
+
+Configuation needs to be managed carefully and consistenly
+
+Your build scripts can pull configuration in and incorporate it into your
+binaries at build time.
+• Your packaging software can inject configuration at packaging time, such
+as when creating assemblies, ears, or gems.
+• Your deployment scripts or installers can fetch the necessary information
+or ask the user for it and pass it to your application at deployment time as
+part of the installation process.
+• Your application itself can fetch configuration at startup time or run time.
+
+
+service depends upon (database, messaging server, external systems)
+database connection 
+
+runtime configuration 
+
+
+
+Managin Application Configuation
+==============================
+==============================
+a set of name value strings
+xml , yaml,..
+database, a version control system, or a directory or registry.
+
+It is often important to keep the actual configuration information specific to
+each of your application’s testing and production environments in a repository
+separate from your source code
+
+don’t Check Passwords into Source Control or Hard-Code Them
+in Your Application
+
+
+Accessing Configuation
+==============================
+easies way filesystem cross plattform, supported every language
+more pract Alternative centzralized repositroy , webservice ESCAP RESTful 
+
+
+simple facad class getThisProperty(), getThatProperty()
+
 

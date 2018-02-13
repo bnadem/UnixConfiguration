@@ -143,4 +143,33 @@ more pract Alternative centzralized repositroy , webservice ESCAP RESTful
 
 simple facad class getThisProperty(), getThatProperty()
 
+Modeling Configuration
+==============================
+
+Modeled as a Tuple
+The application
+The version of applicatoin
+the environnement it runs in (development, UAT, perfomrance, staging, or production)
+
+database may be varied between developer
+and between production
+
+configuation information XML, Rstfull web service shoudl abel to handle the veraios dimensions
+-Adding new enviroment (new developer, workstation)
+-Creatiing new version of app ==> new setting and use old settin
+-Promoting a new version (ensure that any new settings are available)
+-Managin environment using virtualization VMs vonfigured correcty
+
+
+Best way , configuration default, override this devalut in other environnment 
+
+Testing System Configuation
+==============================
+
+
+
+
+
+
+
 

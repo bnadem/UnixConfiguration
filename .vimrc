@@ -1,0 +1,207 @@
+execute pathogen#infect()
+filetype plugin on
+syntax on
+filetype plugin indent on
+ 
+"-----------tabedit configuration file vi 
+
+let mapleader="\<Space>"
+"---------------------set omnifunc=syntaxcomplete#Complete
+
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+
+"autocmd QuickFixCmdPost [^l]* nested cwindow
+"autocmd QuickFixCmdPost    l* nested lwindow
+"Plugin CtrlP ----fast browsing------------------ 
+"------------------------Synthastic disable checker-------------------
+
+"disabl on opening
+" Better :sign interface symbols
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '!'
+let g:syntastic_check_on_open = 0 
+let g:syntastic_check_on_wq = 0
+noremap <C-w>e :SyntasticCheck<CR>
+noremap <C-w>f :SyntasticToggleMode<CR>
+
+"-----------------------Mapping------------------------------------
+
+"map <C-c> :s/^/\/\//<Enter>
+//"make it easy to edit vimrc file
+nmap <Leader>ev :tabedit $MYVIMRC<CR>
+
+"-------------------<Space o> to open new file ----------------
+
+set runtimepath^=~/.vim/bundle/ctrlp.vim
+nnoremap <leader>f :CtrlP ~<CR>
+nnoremap <leader>b :CtrlPBuffer<CR>
+nnoremap <leader>m :CtrlPMRUFiles<CR>
+nnoremap <leader>t :CtrlPTag<CR>
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " Linux/MacOSX
+let g:ctrlp_max_files=0
+"let g:ctrlp_root_directory = "~"
+"let g:ctrlp_working_path_mode = 'ra'
+"let g:ctrlp_cmd='CtrlP :pwd'
+"noremap <C-x> :CtrlP ~<CR>
+
+"-------------------<Space o> to save  file ----------------
+nnoremap <Leader>w :w<CR>
+"--------------------< Space q> to quit file ---------- 
+nnoremap <Leader>q :q<CR>
+
+
+
+augroup autosourcing 
+	autocmd!
+	autocmd BufwritePost $MYVIMRC source % 
+augroup
+
+""-----------------------maping to begin and End Of file -------------------
+"nnoremap <CR> G
+"nnoremap <BS> gg
+
+"---------------Tab navigation recht and left ------------
+	noremap <leader><Leader>l gt
+	noremap <leader><Leader>h gT
+"---------------------------comment block mapping -------------
+
+"map <C-m> :s/^/\/\//<Enter>
+
+"--------------------copy function with visual prcess
+nmap <F9>  jvaBVy
+inoremap II <Esc>I
+inoremap AA <Esc>A
+inoremap OO <Esc>O
+inoremap jj <Esc>
+"-------------------set hightlight search
+
+set hlsearch 
+set incsearch
+nmap <leader><space> :nohlsearch<cr>
+"----------------windows split-------------
+"nmap <C-J> <C-W><C-J>
+"nmap <C-H> <C-W><C-H>
+"nmap <C-K> <C-W><C-K>
+"nmap <C-L> <C-W><C-L>
+
+nmap <Leader>j <C-W><C-J>
+nmap <Leader>h <C-W><C-H>
+nmap <Leader>k <C-W><C-K>
+nmap <Leader>l <C-W><C-L>
+
+
+
+
+"set linespace=15
+
+set backspace=indent,eol,start
+
+
+set clipboard=unnamed
+" use clipboard register in linux when supported
+if has("unix") && v:version >= 703
+    set clipboard+=unnamedplus
+endif
+" Copy and paste
+vmap <C-c> "+yi
+vmap <C-x> "+c
+vmap <C-v> c<ESC>"+p
+imap <C-v> <ESC>"+pa
+syntax on
+let g:solarized_termcolors=256
+set t_Co=256 
+"colorscheme solarized "set background=dark
+
+colorscheme  lucius
+" wLuciusBlackLowContrast
+
+
+
+"nnoremap <C-e> :NERDTreeToggle<CR>
+"-------------------Browser File ------------------------
+nnoremap <F5> :NERDTreeToggle<CR>
+ let g:NERDTreeWinSize = 40 
+ 
+" set number
+
+"-------Maping für CtrlP Plugin
+" Make a simple "search" text object.
+ vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<CR><CR>
+     \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
+     omap s :normal vs<CR>
+
+
+
+
+" Compatible with ranger 1.4.2 through 1.7.*
+"
+" Add ranger as a file chooser in vim
+"
+" If you add this code to the .vimrc, ranger can be started using the command
+" ":RangerChooser" or the keybinding "<leader>r".  Once you select one or more
+" files, press enter and ranger will quit again and vim will open the selected
+" files.
+
+function! RangeChooser()
+     let temp = tempname()
+    " The option "--choosefiles" was added in ranger 1.5.1. Use the next line
+    " with ranger 1.4.2 through 1.5.0 instead.
+    "exec 'silent !ranger --choosefile=' . shellescape(temp)
+    if has("gui_running")
+        exec 'silent !xterm -e ranger --choosefiles=' . shellescape(temp)
+    else
+        exec 'silent !ranger --choosefiles=' . shellescape(temp)
+    endif
+    if !filereadable(temp)
+        redraw!
+        " Nothing to read.
+        return
+    endif
+    let names = readfile(temp)
+    if empty(names)
+        redraw!
+        " Nothing to open.
+        return
+    endif
+    " Edit the first item.
+    exec 'edit ' . fnameescape(names[0])
+    " Add any remaning items to the arg list/buffer list.
+    for name in names[1:]
+        exec 'argadd ' . fnameescape(name)
+    endfor
+    redraw!
+endfunction
+command! -bar RangerChooser call RangeChooser()
+nnoremap <leader>r :<C-U>RangerChooser<CR>
+"In Vim, the gj and gk commands move by line on the screen rather than by line
+"in the file. This sounds like it probably matches your description.
+map j gj
+map k gk
+
+" Send more characters for redraws
+ set ttyfast
+" Enable mouse use in all modes
+ set mouse=a
+"
+" " Set this to the name of your terminal that supports mouse codes.
+" " Must be one of: xterm, xterm2, netterm, dec, jsbterm, pterm
+ set ttymouse=xterm2
+
+
+
+nmap \l :setlocal number!<CR>
+nmap \o :setlocal paste!<CR>
+nmap \p :setlocal nowrap!<CR>
+
+nmap \g :colorscheme gruvbox<CR> && :set background=dark<CR>
+"nmap \m :colorscheme lucius<CR>
+map \c :let &background = ( &background == "dark"? "light" : "dark" )<CR>
+
+
+"errro Message deactivate _Press Enter or type command to continu
+set shortmess=a
+set cmdheight=2
+let g:netrw_silent = 1
+
+
+

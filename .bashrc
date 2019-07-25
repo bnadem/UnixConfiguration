@@ -1,8 +1,16 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
+##    ____  _____ ___    ____  _       _ _        _    ____                            _     _  _    ___  
 
-# If not running interactively, don't do anything
+echo "
+ ____  _____ ___    ____  _       _ _        _    ____                            _     _  _    ___  
+|  _ \| ____/ _ \  |  _ \(_) __ _(_) |_ __ _| |  / ___|___  _ __  _ __   ___  ___| |_  | || |  / _ \ 
+| |_) |  _|| | | | | | | | |/ _` | | __/ _` | | | |   / _ \| '_ \| '_ \ / _ \/ __| __| | || |_| | | |
+|  _ <| |__| |_| | | |_| | | (_| | | || (_| | | | |__| (_) | | | | | | |  __/ (__| |_  |__   _| |_| |
+|_| \_\_____\___/  |____/|_|\__, |_|\__\__,_|_|  \____\___/|_| |_|_| |_|\___|\___|\__|    |_|(_)___/ 
+                            |___/                                                                    "
+
 case $- in
     *i*) ;;
       *) return;;
@@ -122,5 +130,5 @@ fi
 alias uu='neofetch --w3m  ~/Pictures/logo.png --size none --yoffset 30'
 CALLER=$(ps ax | grep "^ *$PPID" | awk '{print $NF}')
 echo I was called from $CALLER
-if [ $CALLER != "tmux" ]; then neofetch --w3m  ~/Pictures/logo.png --size none --yoffset 30
+if [ $CALLER != "tmux" ] && [ $CALLER != "/usr/bin/ranger" ]; then neofetch --w3m  ~/Pictures/logo.png --size none --yoffset 30
 fi

@@ -1,4 +1,3 @@
-
 " Necesary for lots of cool vim things
 set nocompatible
 
@@ -11,19 +10,6 @@ else
 		echo "loades auto plug"
 
 endif
-" Register ccls C++ lanuage server.
-""register server
-"if executable('cquery')
-"	au User lsp_setup call lsp#register_server({
-"				\ 'name': 'cquery',
-"				\ 'cmd': {server_info->['cquery']},
-"				\ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-"				\ 'initialization_options': { 'cacheDirectory': '/tmp/cache' },
-"				\ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
-"				\ })
-"else
-"       	echo 'not load cquery'
-"endif
 
 if executable('/home/farka01/Downloads/ccls/Release/ccls')
 		au User lsp_setup call lsp#register_server({
@@ -36,10 +22,6 @@ if executable('/home/farka01/Downloads/ccls/Release/ccls')
 else
 		echo 'ccls not executable'
 endif
-let g:LanguageClient_serverCommands = {
-						\ 'cpp': [expand('~/cquery/build/cquery'), '--log-file=/tmp/cq.log'],
-						\ 'c': [expand('~/cquery/build/cquery'), '--log-file=/tmp/1cq.log'],
-						\ }
 
 
 call plug#begin()
@@ -48,9 +30,7 @@ call plug#begin()
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
-Plug 'pdavydov108/vim-lsp-cquery'
-Plug 'tomasiser/vim-code-dark'
-"Plug 'Rip-Rip/clang_complete', {'for': ['c', 'cpp'], 'do': 'make install'}
+Plug 'francoiscabrol/ranger.vim'
 call plug#end()
 "for ccls plugin autocomplete c++
 " Key bindings for vim-lsp.
@@ -59,11 +39,6 @@ nn <silent> <M-r> :LspReferences<cr>
 nn <silent> <M-=> :LspDocumentFormat<cr>
 nn <f2> :LspRename<cr>
 
-"let g:lsc_server_commands = {
-"  \ 'c': 'cquery --init="{\"cacheDirectory\": \"/tmp/cquery_cache\"}"',
-"  \ 'cpp': 'cquery --init="{\"cacheDirectory\": \"/tmp/cquery_cache\"}"',
-"  \ }
-"
 set nocompatible
 set backspace=indent,eol,start
 autocmd Filetype cpp setlocal tabstop=4
@@ -276,3 +251,6 @@ augroup autosourcing
 		endif
 
 		set tags=./tags,tags;$HOME
+
+		nnoremap <leader>m :!makepp<CR>
+		nnoremap <C-T> ClangFormatOnSave() %

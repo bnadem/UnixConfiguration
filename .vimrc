@@ -12,7 +12,20 @@ else
 
 endif
 " Register ccls C++ lanuage server.
-if executable('ccls')
+""register server
+"if executable('cquery')
+"	au User lsp_setup call lsp#register_server({
+"				\ 'name': 'cquery',
+"				\ 'cmd': {server_info->['cquery']},
+"				\ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
+"				\ 'initialization_options': { 'cacheDirectory': '/tmp/cache' },
+"				\ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
+"				\ })
+"else
+"       	echo 'not load cquery'
+"endif
+
+if executable('/home/farka01/Downloads/ccls/Release/ccls')
 		au User lsp_setup call lsp#register_server({
 								\ 'name': 'ccls',
 								\ 'cmd': {server_info->['ccls']},
@@ -35,8 +48,8 @@ call plug#begin()
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
-"Plug 'pdavydov108/vim-lsp-cquery'
-"Plug 'tomasiser/vim-code-dark'
+Plug 'pdavydov108/vim-lsp-cquery'
+Plug 'tomasiser/vim-code-dark'
 "Plug 'Rip-Rip/clang_complete', {'for': ['c', 'cpp'], 'do': 'make install'}
 call plug#end()
 "for ccls plugin autocomplete c++
@@ -98,8 +111,8 @@ augroup autosourcing
 		"nnoremap <BS> gg
 
 		"---------------Tab navigation recht and left ------------
-		noremap <leader>l gt
-		noremap <leader>h gT
+		noremap <Leader>l gt
+		noremap <Leader>h gT
 		"---------------------------comment block mapping -------------
 
 		"map <C-m> :s/^/\/\//<CR> 
@@ -120,11 +133,11 @@ augroup autosourcing
 		nmap <C-K> <C-W><C-K>
 		nmap <C-L> <C-W><C-L>
 
-"		nmap <Leader>j <C-W><C-J>
-"		nmap <Leader>h <C-W><C-H>
-"		nmap <Leader>k <C-W><C-K>
-"		nmap <Leader>l <C-W><C-L>
-"
+		"		nmap <Leader>j <C-W><C-J>
+		"		nmap <Leader>h <C-W><C-H>
+		"		nmap <Leader>k <C-W><C-K>
+		"		nmap <Leader>l <C-W><C-L>
+		"
 		"set linespace=15
 
 		set backspace=indent,eol,start
@@ -223,15 +236,6 @@ augroup autosourcing
 		set shortmess=a
 		set cmdheight=2
 		let g:netrw_silent = 1
-
-
-		"lsp for ccls
-		" Key bindings for vim-lsp.
-		nn <silent> <M-d> :LspDefinition<cr>
-		nn <silent> <M-r> :LspReferences<cr>
-		nn <f2> :LspRename<cr>
-		nn <silent> <M-a> :LspWorkspaceSymbol<cr>
-		nn <silent> <M-l> :LspDocumentSymbol<cr>
 		" faster arrow navigation, up and down.
 		nnoremap <C-k> :-5<CR>
 		inoremap <C-k> <Esc>:-5<CR> i
@@ -243,5 +247,32 @@ augroup autosourcing
 		nnoremap <C-Down> :+5<CR>
 		inoremap <C-Down> <Esc>:+5<CR> i
 
- 		autocmd BufWritePre *.h /home/farka01/Downloads/ccls/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04/bin/clang-format
- 		set tags=./tags,tags;$HOME
+		"lsp for ccls
+		" Key bindings for vim-lsp.
+		nn <silent> <M-d> :LspDefinition<cr>
+		nn <silent> <M-r> :LspReferences<cr>
+		nn <f2> :LspRename<cr>
+		nn <silent> <M-a> :LspWorkspaceSymbol<cr>
+		nn <silent> <M-l> :LspDocumentSymbol<cr>
+
+
+
+
+
+
+		let g:clangFormatPath = '/home/farka01/Downloads/ccls/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04/bin/clang-format'
+		if	executable(clangFormatPath)
+				"function! ClangFormatOnSave()
+				function ClangFormatOnSave()
+						let l = line(".")
+						let c = col(".")
+						silent execute '%! /home/farka01/Downloads/ccls/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04/bin/clang-format'
+						"silent execute clangFormatPath 
+		"				call cursor(l, c)
+				endfunction
+				autocmd BufWritePre *.h,*.hpp,*.cpp call ClangFormatOnSave()
+		else
+				echo "not executral clangformatpath"
+		endif
+
+		set tags=./tags,tags;$HOME

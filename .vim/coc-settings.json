@@ -1,7 +1,7 @@
 {
   "languageserver": {
     "ccls": {
-      "command": "~/Downloads/ccls/Release/ccls",
+      "command": "/home/farka01/Downloads/ccls/Release/ccls",
       "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
       "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
       "initializationOptions": {

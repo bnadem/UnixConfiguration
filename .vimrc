@@ -2,8 +2,7 @@
 set nocompatible
 
 "automatic installation vom plug autoload 
-if empty(glob('~/.vim/autoload/plug.vim'))
-		silent !curl -flo ~/.vim/autoload/plug.vim --create-dirs
+if empty(glob('~/.vim/autoload/plug.vim')) silent !curl -flo ~/.vim/autoload/plug.vim --create-dirs
 								\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 		autocmd vimenter * pluginstall --sync | source $myvimrc
 else
@@ -11,6 +10,7 @@ else
 
 endif
 
+" register ccls c++ lanuage server.
 if executable('/home/farka01/Downloads/ccls/Release/ccls')
 		au User lsp_setup call lsp#register_server({
 								\ 'name': 'ccls',
@@ -23,7 +23,7 @@ else
 		echo 'ccls not executable'
 endif
 
-
+"Plugin Installation
 call plug#begin()
 "Plug 'octol/vim-cpp-enhanced-highlight'
 "Plug 'Valloric/YouCompleteMe'
@@ -31,17 +31,14 @@ Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'francoiscabrol/ranger.vim'
+Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
+Plug 'flrnprz/plastic.vim'
 call plug#end()
-"for ccls plugin autocomplete c++
-" Key bindings for vim-lsp.
-nn <silent> <M-d> :LspDefinition<cr>
-nn <silent> <M-r> :LspReferences<cr>
-nn <silent> <M-=> :LspDocumentFormat<cr>
-nn <f2> :LspRename<cr>
+
 
 set nocompatible
-set backspace=indent,eol,start
-autocmd Filetype cpp setlocal tabstop=4
+"set backspace=indent,eol,start
+"autocmd Filetype cpp setlocal tabstop=4
 
 
 set tabstop=4
@@ -50,32 +47,21 @@ set signcolumn="yes"
 highlight ColorColumn ctermbg=magenta
 call matchadd('ColorColumn', '\%81v', 100)
 let mapleader="\<Space>"
-" register ccls c++ lanuage server.
-"if executable('ccls')
-"   au user lsp_setup call lsp#register_server({
-"      \ 'name': 'ccls',
-"      \ 'cmd': {server_info->['ccls']},
-"      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_direct"ory(lsp#tils#get_buffer_path(), 'compile_commands.json'))},
-"      \ 'initialization_options': {'cache': {'directory': '/tmp/ccls/cache' }},
-"      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
-"     \ })
-"endif
 " insatllation of plugin coc for autom completation 
 "-----------------------Mapping------------------------------------
 
 "map <C-c> :s/^/\/\//<Enter>
 "make it easy to edit vimrc file
-nmap <Leader>ev :tabedit $MYVIMRC<CR>
+nmap <Leader>tv :tabedit $MYVIMRC<CR>
 " mapping bashrc 
-nmap <Leader>eb :tabedit ~/.bashrc<CR>
+nmap <Leader>tb :tabedit ~/.bashrc<CR>
 
-noremap <Leader>w :w<CR>
 "--------------------< Space q> to quit file ---------- 
-nnoremap <Leader>q :q<CR>
-nnoremap <Leader>e :q!<CR>
+noremap <Leader>w :w<CR>
+nnoremap <Leader>e :q<CR>
+nnoremap <Leader>q :q!<CR>
 
-
-
+"save vimrc by saving
 augroup autosourcing 
 		autocmd!
 		autocmd BufwritePost $MYVIMRC source % 
@@ -108,12 +94,6 @@ augroup autosourcing
 		nmap <C-K> <C-W><C-K>
 		nmap <C-L> <C-W><C-L>
 
-		"		nmap <Leader>j <C-W><C-J>
-		"		nmap <Leader>h <C-W><C-H>
-		"		nmap <Leader>k <C-W><C-K>
-		"		nmap <Leader>l <C-W><C-L>
-		"
-		"set linespace=15
 
 		set backspace=indent,eol,start
 
@@ -198,12 +178,15 @@ augroup autosourcing
 
 		"colorscheme solarized "set background=dark
 		colorscheme  lucius
+		syntax on
+		"colorscheme plastic
 		"colorscheme  codedark
 		"colorscheme LuciusBlackLowContrast
 		"	nmap \g :colorscheme gruvbox<CR> && :set background=dark<CR>
 		nmap \m :colorscheme lucius<CR>
 		"	colorscheme gruvbox
 		nmap \g :colorscheme gruvbox<CR> 
+		nmap \v :colorscheme plastic<CR> 
 		map \c :let &background = ( &background == "dark"? "light" : "dark" )<CR>
 
 
@@ -213,7 +196,7 @@ augroup autosourcing
 		let g:netrw_silent = 1
 		" faster arrow navigation, up and down.
 		nnoremap <C-k> :-5<CR>
-		inoremap <C-k> <Esc>:-5<CR> i
+		inoremap <C-k> <Eksc>:-5<CR> i
 		nnoremap <C-j> :+5<CR>
 		inoremap <C-j> <Esc>:+5<CR> i
 
@@ -234,16 +217,16 @@ augroup autosourcing
 
 
 
-
+		"autoformat c++ programm header file and implementation
 		let g:clangFormatPath = '/home/farka01/Downloads/ccls/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04/bin/clang-format'
 		if	executable(clangFormatPath)
 				"function! ClangFormatOnSave()
 				function ClangFormatOnSave()
 						let l = line(".")
 						let c = col(".")
-						silent execute '%! /home/farka01/Downloads/ccls/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04/bin/clang-format'
+						silent execute '/home/farka01/Downloads/ccls/clang+llvm-8.0.0-x86_64-linux-gnu-ubuntu-16.04/bin/clang-format'
 						"silent execute clangFormatPath 
-		"				call cursor(l, c)
+						call cursor(l, c)
 				endfunction
 				autocmd BufWritePre *.h,*.hpp,*.cpp call ClangFormatOnSave()
 		else
@@ -253,4 +236,40 @@ augroup autosourcing
 		set tags=./tags,tags;$HOME
 
 		nnoremap <leader>m :!makepp<CR>
-		nnoremap <C-T> ClangFormatOnSave() %
+		"for ccls plugin autocomplete c++
+		" Key bindings for vim-lsp.
+		nn <silent> <M-d> :LspDefinition<cr>
+		nn <silent> <M-r> :LspReferences<cr>
+		nn <silent> <M-=> :LspDocumentFormat<cr>
+		nn <f2> :LspRename<cr>
+		nmap <silent>  <C-x>  :call ClangFormatOnSave() %<CR>
+
+
+		nnoremap <leader>x *``cgn
+		nnoremap <leader>X #``cgN
+
+
+		"buffer
+		nnoremap <leader>cd :cd %:p:h<CR>
+		let g:buftabline_numbers = 1
+		" Allow switching to buffer #<n> by typing <n>e
+		function! s:bufSwitch(count)
+				if count >=# 1
+						return ":\<C-U>" . count . "b\<CR>"
+				endif
+				return 'e'
+		endfunction
+		nnoremap <expr> e <SID>bufSwitch(v:count)
+		nnoremap tt <c-^>
+
+
+
+
+		map <up> <nop>
+		map <down> <nop>
+		map <left> <nop>
+		map <right> <nop>
+		map <leader>v ggg?G
+
+
+		let g:html_indent_style1 = "inc" 

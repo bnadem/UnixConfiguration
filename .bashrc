@@ -137,3 +137,6 @@ fi
 #neofetch --w3m  ~/Pictures/logo.png --size none --yoffset 30
 alias nf='neofetch --w3m  ~/Pictures/logo.png --size none --yoffset 30'
 VISUAL=vim; export VISUAL EDITOR=vim; export EDITOR
+alias webapp="cd ~/ReoDig04WithAppLogin && ng serve --poll"
+alias cdwebapp="cd /home/farka01/ReoDig04WithAppLogin/src/app" 
+alias ccls="~/Downloads/ccls/Release/ccls"

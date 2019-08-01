@@ -11,6 +11,7 @@ else
 
 endif
 
+" register ccls c++ lanuage server.
 if executable('/home/farka01/Downloads/ccls/Release/ccls')
 		au User lsp_setup call lsp#register_server({
 								\ 'name': 'ccls',
@@ -31,6 +32,7 @@ Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 Plug 'prabirshrestha/async.vim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'francoiscabrol/ranger.vim'
+Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
 call plug#end()
 
 
@@ -45,16 +47,6 @@ set signcolumn="yes"
 highlight ColorColumn ctermbg=magenta
 call matchadd('ColorColumn', '\%81v', 100)
 let mapleader="\<Space>"
-" register ccls c++ lanuage server.
-"if executable('ccls')
-"   au user lsp_setup call lsp#register_server({
-"      \ 'name': 'ccls',
-"      \ 'cmd': {server_info->['ccls']},
-"      \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_direct"ory(lsp#tils#get_buffer_path(), 'compile_commands.json'))},
-"      \ 'initialization_options': {'cache': {'directory': '/tmp/ccls/cache' }},
-"      \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
-"     \ })
-"endif
 " insatllation of plugin coc for autom completation 
 "-----------------------Mapping------------------------------------
 
@@ -102,12 +94,6 @@ augroup autosourcing
 		nmap <C-K> <C-W><C-K>
 		nmap <C-L> <C-W><C-L>
 
-		"		nmap <Leader>j <C-W><C-J>
-		"		nmap <Leader>h <C-W><C-H>
-		"		nmap <Leader>k <C-W><C-K>
-		"		nmap <Leader>l <C-W><C-L>
-		"
-		"set linespace=15
 
 		set backspace=indent,eol,start
 
@@ -271,4 +257,13 @@ augroup autosourcing
 				return 'e'
 		endfunction
 		nnoremap <expr> e <SID>bufSwitch(v:count)
-		nnoremap <bs> <c-^>
+		nnoremap tt <c-^>
+
+
+
+
+		map <up> <nop>
+		map <down> <nop>
+		map <left> <nop>
+		map <right> <nop>
+		map <leader>v ggg?G

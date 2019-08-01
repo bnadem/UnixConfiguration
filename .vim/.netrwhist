@@ -1,11 +1,12 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =9
+let g:netrw_dirhistcnt =3
+let g:netrw_dirhist_3='/home/farka01/.config/ranger'
+let g:netrw_dirhist_2='/home/farka01/Desktop/webapp/REODigitalConnect4-0/ReoDig04WithAppLogin/.ccls-cache/@@home@farka01@Desktop@webapp@REODigitalConnect4-0@ReoDig04WithAppLogin'
+let g:netrw_dirhist_1='/home/farka01/Desktop/webapp/REODigitalConnect4-0/ReoDig04WithAppLogin/.ccls-cache'
+let g:netrw_dirhist_0='/home/farka01/Desktop/webapp/REODigitalConnect4-0/ReoDig04WithAppLogin/src/app/home'
 let g:netrw_dirhist_9='/home/farka01/REO_BACKEND/include'
 let g:netrw_dirhist_8='/home/farka01/REO_BACKEND'
 let g:netrw_dirhist_7='/home/farka01/REO_BACKEND/include'
 let g:netrw_dirhist_6='/home/farka01/Desktop/webapp/REODigitalConnect4-0/ReoDig04WithAppLogin'
 let g:netrw_dirhist_5='/home/farka01/Desktop/opcua/openc++/open62541Cpp'
 let g:netrw_dirhist_4='/home/farka01/Desktop/opcua/openc++/open62541Cpp/ClientFindServers'
-let g:netrw_dirhist_3='/home/farka01/Desktop/opcua/openc++/open62541Cpp'
-let g:netrw_dirhist_2='/home/farka01'
-let g:netrw_dirhist_1='/home/farka01/.vim'

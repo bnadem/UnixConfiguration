@@ -1,0 +1,14 @@
+Erstemal ich hab cross compiler installieretn , vom da Build projarm für Raspberypi
+leider weil ich einfach new C++ 17 benutze, 
+hab  versucht Mein Project Ordner In Rasperyp rüberschicke, damit ich direkt anfangen kann
+Speicher ist zu Ende, Speicher reduzieren, Programm dinstallieren..
+troztdem hat nicht geklappt
+ich hab sogar den GUI deinstalliert, damit ich mehr Speicher
+dann könnte rüber koopieren, das ist nur über sssh
+
+Libarary Botan für Cryptography Version 2 , gitb keine dasfür Armarchitecktur
+dann habalte Version 1.7 gebildent im Raspberypi, das heisst muss ich auch mein Programm änern
+Boost filesystem wird nicht intestalliren..., hab deaktivieren
+
+dann kamm json Parser, der nicht laufen kann 
+viele Arbeit, kosten Nerven und Zeit

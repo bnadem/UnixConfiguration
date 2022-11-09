@@ -8,28 +8,12 @@ if empty(glob('~/.vim/autoload/plug.vim'))
     autocmd vimenter * pluginstall --sync | source $myvimrc
 endif
 
-" register ccls c++ lanuage server.
-" if executable('/home/farka01/Downloads/ccls/Release/ccls')
-"     au User lsp_setup call lsp#register_server({
-"                 \ 'name': 'ccls',
-"                 \ 'cmd': {server_info->['ccls']},
-"                 \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-"                 \ 'initialization_options': {'cache': {'directory': '/tmp/ccls/cache' }},
-"                 \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp', 'cc'],
-"                 \ })
-" else
-"     echo 'ccls not executable'
-" endif
 
-"{{{{{{{{{{{{{{{{{{ Section Plugin Installation
+
 call plug#begin()
-"Plug 'octol/vim-cpp-enhanced-highlight'
-" Plug 'Valloric/YouCompleteMe'
-" Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" Use release branch (recommend)
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'prabirshrestha/async.vim'
+" Plug  'tpope/vim-surround'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'neoclide/coc-tsserver', {'do': {-> coc#utinl#install()}}
@@ -40,16 +24,12 @@ Plug 'sonph/onehalf'
 Plug 'ap/vim-css-color'
 Plug 'tpope/vim-commentary'
 Plug 'rust-lang/rust.vim'
-"Plug 'kamwitsta/nordisk'
-"Colorshema
-"Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
+" Plug 'puremourning/vimspector'
 call plug#end()
-"}}}}}}}}}}}}}}}}}}}}}}}}}}}}}End Plugin
 
 "autocmd Filetype cpp setlocal tabstop=4
 highlight ColorColumn ctermbg=magenta
 call matchadd('ColorColumn', '\%81v', 100)
-"{{{{{{{{{{{{{{{{{{{{{{{{{ Maping
 let mapleader="\<Space>"
 "map <C-c> :s/^/\/\//<Enter>
 "make it easy to edit vimrc file
@@ -64,12 +44,7 @@ nnoremap <Leader>q :q!<CR>
 nnoremap <Leader>t :ter ++curwin<CR>
 " insatllation of plugin coc for autom completation
 "nnoremap ,cc :c\<!--<c-r>"--\>
-""-----------------------maping to begin and End Of file -------------------
-"nnoremap <CR> G
-"nnoremap <BS> gg
 "---------------Tab navigation recht and left ------------
-"noremap <Leader>l gt
-"noremap <Leader>h gT
 noremap <Leader>l <C-W><C-L>
 noremap <Leader>h <C-W><C-H>
 "---------------------------go to Midlle of Line------------
@@ -88,24 +63,23 @@ nmap <leader><space> :nohlsearch<cr>
 "most useful Line
 set autowrite
 set cursorline
-" nnoremap L $
-" nnoremap H 0
+
 setlocal complete-=i
 
 
 "----------------windows split-------------
-"    nmap <C-J> <C-W><C-J>
-"    nmap <C-H> <C-W><C-H>
-"    nmap <C-K> <C-W><C-K>
-"    nmap <C-L> <C-W><C-L>
 "
 nmap <C-H> gT
 nmap <C-L> gt
+
 " Copy and paste
 vmap <C-c> "+yi
 vmap <C-x> "+c
 vmap <C-v> c<ESC>"+p
 imap <C-v> <ESC>"+pa
+noremap <leader>y "+y
+noremap <leader>p "+p
+
 "In Vim, the gj and gk commands move by line on the screen rather than by line
 "in the file. This sounds like it probably matches your description.
 map j gj
@@ -135,7 +109,6 @@ inoremap <C-Up> <Esc>:-5<CR> i
 nnoremap <C-Down> :+5<CR>
 inoremap <C-Down> <Esc>:+5<CR> i
 "format code
-nmap <silent>  <c-x>  :call ClangFormatOnSave() %<CR>
 nnoremap <leader>m :!makepp<CR>
 nnoremap <leader>x *``cgn
 nnoremap <leader>X #``cgN
@@ -169,8 +142,6 @@ map <leader>v ggg?G
 "augroup END
 "visual Mode
 "vmap D y'>p
-"}}}}}}}}}}}}}}} end  Mapping
-"{{{{{{{{{{{{{{ begin Setting
 highlight ColorColumn ctermbg=0 guibg=#081C23
 " set so
 set scrolloff=2
@@ -317,18 +288,6 @@ nn <f2> :LspRename<cr>
 nn <silent> <M-a> :LspWorkspaceSymbol<cr>
 nn <silent> <M-l> :LspDocumentSymbol<cr>
 "autoformat c++ programm header file and implementation
-let g:clangFormatPath = '/home/farka01/Downloads/ccls/clang-llvm-8-0-0/bin/clang-format'
-if	executable(clangFormatPath)
-    function! ClangFormatOnSave()
-        let l = line(".")
-        let c = col(".")
-        silent execute "%!/home/farka01/Downloads/ccls/clang-llvm-8-0-0/bin/clang-format"
-        call cursor(l, c)
-    endfunction
-    "        autocmd BufWritePre *.h,*.hpp,*.cpp call ClangFormatOnSave()
-else
-    echo "not executral clangFormatpath"
-endif
 set tags=./tags,tags;$HOME
 "for ccls plugin autocomplete c++
 " Key bindings for vim-lsp.
@@ -558,6 +517,42 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
+" switch between buffer
+nnoremap <leader><leader> <c-^>
+set guifont=JetBrains\ Mono\ 13
 
-filetype plugin on
-syntax on
+" set pasttoggle=<F3>
+
+
+set makeprg=./build_linux.sh\ %
+map <F4> :w\|mak %\|cw<CR> 
+" nnoremap <leader>b :!tmux run-shell -b -t 2 'cd /home/farka01/Desktop/working/REO_BACKEND && ./build_linux.sh '<CR><C-L>
+" nnoremap <leader>b :call BuildProjectCpp()<CR><CR><CR>
+nnoremap <leader>b :call BuildProjectCpp()<CR><CR><CR>
+nnoremap <leader>c :call CompileProjectCpp()<CR><CR><CR>
+
+function BuildProjectCpp()
+    execute ':!tmux send-keys -t 2 "cd /home/farka01/Desktop/working/REO_BACKEND && ./build_linux.sh && build/Release/bin/RDC4.0" ENTER'
+endfunction
+
+function CompileProjectCpp()
+    let workingrelease='/home/farka01/Desktop/working/BACKEND/build/Release'
+    let execPath="/home/farka01/Desktop/working/FIRMA_BACKEND/build/Release/bin/FIRMA"
+    silent execute ':!tmux send-keys -t 2 C-c ENTER'
+    silent execute ':!tmux send-keys -t 2 "clear" ENTER'
+    execute ':!tmux send-keys -t 2 "cd ' . workingrelease . ' && make && ' .  execPath . ' " ENTER'
+endfunction
+
+function BuildProjectCpp1()
+    " session=whatever
+    session=1
+    window=${session}:0
+    pane=${window}.2
+    execute ':!tmux send-keys -t "$pane" C-z ''echo "abdlillah farka"'' Enter'
+    execute ':!tmux select-pane -t "$pane"'
+    execute ':!tmux select-window -t "$window"'
+    execute ':!tmux atach-session -t "$session"'
+    " command! :w!
+    " execute ':!tmux run-shell -b -t 2 ''cd /home/farka01/Desktop/working/REO_BACKEND && ./build_linux.sh && cd build/Debug/bind && ./RDC4.0'' '
+endfunction
+

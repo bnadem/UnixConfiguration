@@ -1,24 +1,8 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
-##    ____  _____ ___    ____  _       _ _        _    ____                            _     _  _    ___  
-#CALLER=$(ps ax | grep "^ *$PPID" | awk '{print $NF}')
-CALLER=$(ps ax | grep "^ *$PPID" | awk '{print $NF}')
-CALLER=$(ps -o comm= $PPID)
-echo I was called from $CALLER
 
-if [ $CALLER != "tmux" ] && [ $CALLER != "/usr/bin/ranger" ]; then
-cat << "EOF"
- ____  _____ ___    ____  _       _ _        _    ____                            _     _  _    ___  
-|  _ \| ____/ _ \  |  _ \(_) __ _(_) |_ __ _| |  / ___|___  _ __  _ __   ___  ___| |_  | || |  / _ \ 
-| |_) |  _|| | | | | | | | |/ _` | | __/ _` | | | |   / _ \| '_ \| '_ \ / _ \/ __| __| | || |_| | | |
-|  _ <| |__| |_| | | |_| | | (_| | | || (_| | | | |__| (_) | | | | | | |  __/ (__| |_  |__   _| |_| |
-|_| \_\_____\___/  |____/|_|\__, |_|\__\__,_|_|  \____\___/|_| |_|_| |_|\___|\___|\__|    |_|(_)___/ 
-                            |___/                                                                   
-EOF
-	   	neofetch --w3m  ~/Pictures/logo.png --size none --yoffset 30
-fi
-
+# If not running interactively, don't do anything
 case $- in
     *i*) ;;
       *) return;;
@@ -77,7 +61,6 @@ if [ "$color_prompt" = yes ]; then
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
-#PS1='\$ '
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
@@ -132,11 +115,55 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-[ -r /home/farka01/.byobu/prompt ] && . /home/farka01/.byobu/prompt   #byobu-prompt#
 
-#neofetch --w3m  ~/Pictures/logo.png --size none --yoffset 30
-alias nf='neofetch --w3m  ~/Pictures/logo.png --size none --yoffset 30'
-VISUAL=vim; export VISUAL EDITOR=vim; export EDITOR
-alias webapp="cd ~/ReoDig04WithAppLogin && ng serve --poll"
-alias cdwebapp="cd /home/farka01/ReoDig04WithAppLogin/src/app" 
-alias ccls="~/Downloads/ccls/Release/ccls"
+. "$HOME/.cargo/env"
+export VISUAL=vim;
+export EDITOR=vim;
+
+# avoid duplicates..
+export HISTCONTROL=ignoredups:erasedups
+
+# append history entries..
+shopt -s histappend
+# After each command, save and reload history
+export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+
+  # cd /home/tree/projects/java
+                             # tmux send-keys -t website:0.0 'cd "${rootDirectory}"' Enter
+
+alias back_front=bf
+back_front()
+{
+    rootDirectory='/home/farka01/Desktop/working'
+    backend="${rootDirectory}/REO_BACKEND"
+    frontend="${rootDirectory}/frontend_rdc40"
+    # if the session called exactly 'backend_frontend' exist
+    if ! tmux has-session -t=bf; then
+        # if it does not exist
+        # create a new session (new -s) called 'bf' detached (-d flag)
+        tmux new -s bf -d
+        # send-keys (change directory command) in the 0th window and 0th pane
+        # first windows open vim with two tabnew
+        tmux split-window -v -t bf:0.0
+        tmux send-keys -t bf:0.0 'cd '${rootDirectory}'' Enter
+        tmux send-keys -t bf:0.0 'vim -p '${backend}'/ReoBackendIndustry4_0.cpp '${frontend}'/src/app/home/home.component.ts' Enter
+        # tmux send-keys -t bf:0.0 'vim  -p "'${backend}'/ReoBackendIndustry4_0.cpp"'  Enter
+        tmux split-window -p 20 -h -t bf:0.0
+        tmux send-keys -t bf:0.1 'htop' Enter
+
+        # split the 0th pane of the 0th window of the 'bf' vertically
+        tmux split-window -h -t bf:0.2
+        tmux send-keys -t bf:0.2 'cd "${backend}"' Enter
+        pathServerExe="${backend}/build/Release/bin/RDC4.0"
+        tmux send-keys -t bf:0.2 "${pathServerExe}" Enter
+        # tmux send-keys -t bf:0.1 "ls" Enter
+        # run hugo server there
+        # tmux send-keys -t bf:0.1 'hugo serve -e production -D -F' Enter
+        # run angular frontend server
+        tmux send-keys -t bf:0.3 'cd '${frontend}'' Enter
+        tmux send-keys -t bf:0.3 'ng serve' Enter
+    fi
+
+         # attach to the session called 'bf'
+         tmux a -t=bf
+     }

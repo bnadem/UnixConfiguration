@@ -131,7 +131,48 @@ export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
   # cd /home/tree/projects/java
                              # tmux send-keys -t website:0.0 'cd "${rootDirectory}"' Enter
 
+ # alias tmux="TERM=screen-256color-bce tmux"
 alias back_front=bf
+alias rust_dev=jt
+rust_dev(){
+    rootDirectory='/home/farka01/Desktop/challenges/zero-to-production'
+    # if the session called exactly 'backend_frontend' exist
+    if ! tmux has-session -t=jt; then
+        # if it does not exist
+        # create a new session (new -s) called 'jt' detached (-d flag)
+        tmux new -s jt -d
+        # send-keys (change directory command) in the 0th window and 0th pane
+        # first windows open vim with two tabnew
+        tmux split-window -v -t jt:0.0
+        tmux send-keys -t jt:0.0 'cd '${rootDirectory}'' Enter
+        tmux send-keys -t jt:0.0 'ranger' Enter
+        tmux split-window -p 20 -h -t jt:0.0
+        tmux send-keys -t jt:0.1 'htop' Enter
+
+        # split the 0th pane of the 0th window of the 'jt' vertically
+        tmux split-window -h -t jt:0.2
+        # stop docker database and redis, and remove it in forth pane
+        # tmux send-keys -t jt:0.3 'docker stop $(docker ps -a | grep postgre | awk ''{print $1}'') ' Enter
+        # tmux send-keys -t jt:0.3 'docker stop $(docker ps -a | grep redis | awk ''{print $1}'') ' Enter
+        # tmux send-keys -t jt:0.3 'docker rm $(docker ps -a | grep postgre | awk ''{print $1}'') ' Enter
+        # tmux send-keys -t jt:0.3 'docker rm $(docker ps -a | grep redis | awk ''{print $1}'') ' Enter
+docker stop $(docker ps -a | grep postgre | awk '{print $1}')
+docker stop $(docker ps -a | grep redis | awk '{print $1}')
+docker rm $(docker ps -a | grep postgre | awk '{print $1}')
+docker rm $(docker ps -a | grep redis | awk '{print $1}')
+        tmux send-keys -t jt:0.3 'cd '${rootDirectory}'' Enter
+        tmux send-keys -t jt:0.3 'scripts/init_db.sh' Enter
+        tmux send-keys -t jt:0.3 'scripts/init_redis.sh' Enter
+        # tmux send-keys -t jt:0.3 'htop' Enter
+        # run in third pane
+        tmux send-keys -t jt:0.2 'cd '${rootDirectory}'' Enter
+        tmux send-keys -t jt:0.2 'cargo watch -x run' Enter
+        # tmux send-keys -t jt:0.2 'htop' Enter
+    fi
+
+         # attach to the session called 'bf'
+         tmux a -t=jt
+     }
 back_front()
 {
     rootDirectory='/home/farka01/Desktop/working'
@@ -167,3 +208,4 @@ back_front()
          # attach to the session called 'bf'
          tmux a -t=bf
      }
+

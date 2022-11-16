@@ -11,12 +11,9 @@ endif
 
 
 call plug#begin()
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'prabirshrestha/async.vim'
-" Plug  'tpope/vim-surround'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'francoiscabrol/ranger.vim'
-" Plug 'neoclide/coc-tsserver', {'do': {-> coc#utinl#install()}}
 Plug 'flrnprz/plastic.vim'
 Plug 'tpope/vim-fugitive'
 " Plug 'cocopon/iceberg.vim'
@@ -80,6 +77,7 @@ imap <C-v> <ESC>"+pa
 noremap <leader>y "+y
 noremap <leader>p "+p
 
+
 "In Vim, the gj and gk commands move by line on the screen rather than by line
 "in the file. This sounds like it probably matches your description.
 map j gj
@@ -89,8 +87,8 @@ nmap \n :setlocal relativenumber!<CR>
 nmap \p :setlocal paste!<CR>
 nmap \o :setlocal nowrap!<CR>
 "	nmap \g :colorscheme gruvbox<CR> && :set background=dark<CR>
-nmap \l :colorscheme lucius<CR> LuciusLight<CR>
-nmap \d colorscheme apprentice<CR>
+nmap \l :colorscheme lucius<CR>
+nmap \d :colorscheme apprentice<CR>
 " nmap \a :colorscheme apprentice<CR>
 " nmap \l :colorscheme everforest<CR>
 "	colorscheme gruvbox
@@ -110,24 +108,35 @@ nnoremap <C-Up> :-5<CR>
 inoremap <C-Up> <Esc>:-5<CR> i
 nnoremap <C-Down> :+5<CR>
 inoremap <C-Down> <Esc>:+5<CR> i
-"format code
-nnoremap <leader>m :!makepp<CR>
-nnoremap <leader>x *``cgn
-nnoremap <leader>X #``cgN
-"nnoremap <leader>cd :cd %:p:h<CR>
-"  nnoremap <expr> e <SID>bufSwitch(v:count)
-nnoremap tt <c-^>
+" jump to the previous function  for c++ function
+nnoremap <silent> [f :cal search('\(\(if\\|for\\|while\\|switch\\|catch\)\_s*\)\@64<!(\_[^)]*)\_[^;{}()]*\zs{', "bw")<CR>
+" jump to the next function  for c++ function
+nnoremap <silent> ]f :call search('\(\(if\\|for\\|while\\|switch\\|catch\)\_s*\)\@64<!(\_[^)]*)\_[^;{}()]*\zs{', "w")<CR>
+"jumping inside line coma and poiont problem in germany keyboard
+nnoremap ; ,
+nnoremap , ;
+vnoremap ; ,
+vnoremap , ;
+nnoremap <leader><leader> <c-^>
 nnoremap <C-p> :call GoToRecentBuffer('previous')<CR>
 nnoremap <C-n> :call GoToRecentBuffer('next')<CR>
 nnoremap <Leader>b :ls<CR>:b<Space>
-" switch betwnn buffer
-" map <C-J> :bnext<CR>
-"  map <C-K> :bprev<CR>
+" disable arrow top down left right, just olny key vim default key jklh 
 map <up> <nop>
 map <down> <nop>
 map <left> <nop>
 map <right> <nop>
+
+"format code
+nnoremap <leader>x *``cgn
+nnoremap <leader>X #``cgN
+"nnoremap <leader>cd :cd %:p:h<CR>
+"  nnoremap <expr> e <SID>bufSwitch(v:count)
+" switch betwnn buffer
+" map <C-J> :bnext<CR>
+"  map <C-K> :bprev<CR>
 map <leader>v ggg?G
+"
 " List contents of all registers (that typically contain pasteable text).
 " nnoremap <silent> "" :registers "0123456789abcdefghijklmnopqrstuvwxyz*+.<CR>
 " nmap <leader>y :%s/\(^\s*\n\)\{2,}/\r\r/g <cr>
@@ -395,18 +404,16 @@ endfunction
 
 
 " switch between buffer
-nnoremap <leader><leader> <c-^>
 set guifont=JetBrains\ Mono\ 13
 
 " set pasttoggle=<F3>
 
 
-set makeprg=./build_linux.sh\ %
-map <F4> :w\|mak %\|cw<CR> 
 " nnoremap <leader>b :!tmux run-shell -b -t 2 'cd /home/farka01/Desktop/working/REO_BACKEND && ./build_linux.sh '<CR><C-L>
 " nnoremap <leader>b :call BuildProjectCpp()<CR><CR><CR>
-nnoremap <leader>b :call BuildProjectCpp()<CR><CR><CR>
-nnoremap <leader>c :call CompileProjectCpp()<CR><CR><CR>
+" buid and run
+nnoremap <leader>br :call BuildProjectCpp()<CR><CR><CR>
+nnoremap <leader>cr :call CompileProjectCpp()<CR><CR><CR>
 
 function BuildProjectCpp()
     execute ':!tmux send-keys -t 2 "cd /home/farka01/Desktop/working/REO_BACKEND && ./build_linux.sh && build/Release/bin/RDC4.0" ENTER'
@@ -432,10 +439,3 @@ function BuildProjectCpp1()
     " command! :w!
     " execute ':!tmux run-shell -b -t 2 ''cd /home/farka01/Desktop/working/REO_BACKEND && ./build_linux.sh && cd build/Debug/bind && ./RDC4.0'' '
 endfunction
-
-
-function! SetLucius(style, contrast, contrast_bg)
-        let g:lucius_style = a:style
-            let g:lucius_contrast = a:contrast
-                let g:lucius_contrast_bg = a:contrast_bg
-            endfunction

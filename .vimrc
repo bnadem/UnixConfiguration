@@ -9,6 +9,8 @@ if empty(glob(data_dir . '/autoload/plug.vim'))
   autocmd VimEntej * PlugInstall --sync | source $MYVIMRC
 endif
 call plug#begin()
+Plug 'jonathanfilip/vim-lucius'
+Plug 'romainl/Apprentice'
 " Plug 'prabirshrestha/async.vim'
 " Plug 'prabirshrestha/vim-lsp'
 " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }

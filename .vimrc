@@ -1,18 +1,17 @@
 set nocompatible
 filetype plugin on
 runtime macros/matchit.vim
-"automatic installation vom plug autoload
-if empty(glob('~/.vim/autoload/plug.vim'))
-    silent !curl -flo ~/.vim/autoload/plug.vim --create-dirs
-                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    autocmd vimenter * pluginstall --sync | source $myvimrc
+
+
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEntej * PlugInstall --sync | source $MYVIMRC
 endif
-
-
-
 call plug#begin()
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/vim-lsp'
+" Plug 'prabirshrestha/async.vim'
+" Plug 'prabirshrestha/vim-lsp'
+" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'francoiscabrol/ranger.vim'
 Plug 'flrnprz/plastic.vim'
 Plug 'tpope/vim-fugitive'
@@ -20,14 +19,26 @@ Plug 'tpope/vim-fugitive'
 Plug 'sonph/onehalf'
 Plug 'ap/vim-css-color'
 Plug 'tpope/vim-commentary'
-Plug 'rust-lang/rust.vim'
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'yarn install --frozen-lockfile --production',
+  \ 'branch': 'release/0.x'
+  \ }
+" Plug 'rust-lang/rust.vim'
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'dense-analysis/ale'
 " Plug 'puremourning/vimspector'
 call plug#end()
+let g:prettier#autoformat = 1
+let g:prettier#autoformat_config_present = 1
+au FileType ts,css,scss,html let b:prettier_exec_cmd = "prettier-stylelint"
+nmap <Leader>z <Plug>(Prettier)
+
 
 "autocmd Filetype cpp setlocal tabstop=4
 highlight ColorColumn ctermbg=magenta
 call matchadd('ColorColumn', '\%81v', 100)
 let mapleader="\<Space>"
+" let mapleader=","
 "map <C-c> :s/^/\/\//<Enter>
 "make it easy to edit vimrc file
 nmap <Leader>tv :tabedit $MYVIMRC<CR>
@@ -60,6 +71,8 @@ nmap <leader><space> :nohlsearch<cr>
 "most useful Line
 set autowrite
 set cursorline
+set maxmempattern=50000
+
 
 setlocal complete-=i
 
@@ -113,11 +126,25 @@ nnoremap <silent> [f :cal search('\(\(if\\|for\\|while\\|switch\\|catch\)\_s*\)\
 " jump to the next function  for c++ function
 nnoremap <silent> ]f :call search('\(\(if\\|for\\|while\\|switch\\|catch\)\_s*\)\@64<!(\_[^)]*)\_[^;{}()]*\zs{', "w")<CR>
 "jumping inside line coma and poiont problem in germany keyboard
-nnoremap ; ,
-nnoremap , ;
-vnoremap ; ,
-vnoremap , ;
-nnoremap <leader><leader> <c-^>
+"
+" nnoremap ; ,
+" nnoremap , ;
+" vnoremap ; ,
+" vnoremap , ;
+
+" left
+" nnoremap H ^
+" " right
+" nnoremap L $
+" " top
+" nnoremap K H
+" " down
+" nnoremap J L
+" " join
+" nnoremap $ J
+" nnoremap <leader><leader> <c-^>
+nnoremap tt <c-^>
+
 nnoremap <C-p> :call GoToRecentBuffer('previous')<CR>
 nnoremap <C-n> :call GoToRecentBuffer('next')<CR>
 nnoremap <Leader>b :ls<CR>:b<Space>
@@ -233,13 +260,13 @@ command! RegClean for i in range(34,122) | silent! call setreg(nr2char(i), []) |
 
 "save vimrc by saving
 augroup autosourcing
-    autocmd!
-    autocmd BufwritePost $MYVIMRC source %
+autocmd!
+autocmd BufwritePost $MYVIMRC source %
 augroup END
 " augroup
 " use clipboard register in linux when supported
 if has("unix") && v:version >= 703
-    set clipboard+=unnamedplus
+set clipboard+=unnamedplus
 endif
 let g:solarized_termcolors=256
 let g:airline_theme='onehalfdark'
@@ -253,33 +280,33 @@ set t_Co=256
 " files, press enter and ranger will quit again and vim will open the selected
 " files.
 function! RangeChooser()
-    let temp = tempname()
-    " The option "--choosefiles" was added in ranger 1.5.1. Use the next line
-    " with ranger 1.4.2 through 1.5.0 instead.
-    "exec 'silent !ranger --choosefile=' . shellescape(temp)
-    if has("gui_running")
-        exec 'silent !xterm -e ranger --choosefiles=' . shellescape(temp)
-    else
-        exec 'silent !ranger --choosefiles=' . shellescape(temp)
-    endif
-    if !filereadable(temp)
-        redraw!
-        " Nothing to read.
-        return
-    endif
-    let names = readfile(temp)
-    if empty(names)
-        redraw!
-        " Nothing to open.
-        return
-    endif
-    " Edit the first item.
-    exec 'edit ' . fnameescape(names[0])
-    " Add any remaning items to the arg list/buffer list.
-    for name in names[1:]
-        exec 'argadd ' . fnameescape(name)
-    endfor
+let temp = tempname()
+" The option "--choosefiles" was added in ranger 1.5.1. Use the next line
+" with ranger 1.4.2 through 1.5.0 instead.
+"exec 'silent !ranger --choosefile=' . shellescape(temp)
+if has("gui_running")
+    exec 'silent !xterm -e ranger --choosefiles=' . shellescape(temp)
+else
+    exec 'silent !ranger --choosefiles=' . shellescape(temp)
+endif
+if !filereadable(temp)
     redraw!
+    " Nothing to read.
+    return
+endif
+let names = readfile(temp)
+if empty(names)
+    redraw!
+    " Nothing to open.
+    return
+endif
+" Edit the first item.
+exec 'edit ' . fnameescape(names[0])
+" Add any remaning items to the arg list/buffer list.
+for name in names[1:]
+    exec 'argadd ' . fnameescape(name)
+endfor
+redraw!
 endfunction
 command! -bar RangerChooser call RangeChooser()
 "colorscheme solarized "set background=dark
@@ -317,17 +344,17 @@ let g:buftabline_numbers = 1
 "      return 'e'
 "  endfunction
 function! GoToRecentBuffer(direction)
-    let limit     = 0
-    let startName = bufname('%')
-    let nowName   = bufname('%')
-    while (startName == nowName) && (a:direction == 'previous' ? limit < 100 : limit <= 100)
-        execute a:direction == 'previous' ? "normal! \<C-o>" : "normal! 1\<C-i>"
-        let nowName = bufname('%')
-        let limit  += 1
-    endwhile
-    if startName == nowName
-        echo "No " . a:direction . " file."
-    endif
+let limit     = 0
+let startName = bufname('%')
+let nowName   = bufname('%')
+while (startName == nowName) && (a:direction == 'previous' ? limit < 100 : limit <= 100)
+    execute a:direction == 'previous' ? "normal! \<C-o>" : "normal! 1\<C-i>"
+    let nowName = bufname('%')
+    let limit  += 1
+endwhile
+if startName == nowName
+    echo "No " . a:direction . " file."
+endif
 endfunction
 let g:html_indent_style1 = "inc"
 " Clear trailing whitespace in selected file types on save
@@ -340,10 +367,10 @@ let g:html_indent_style1 = "inc"
 " autocmd FileType xml let b:match_words = '<\(\w\w*\):</\1,{:}'
 "Terminal Mapping
 augroup BgHighlight
-    autocmd!
-    highlight ActiveWindow guibg=lightblue
-    autocmd WinEnter * call matchadd('ActiveWindow', '.*', 10, 1682)
-    autocmd WinLeave * call matchdelete(1682)
+autocmd!
+highlight ActiveWindow guibg=lightblue
+autocmd WinEnter * call matchadd('ActiveWindow', '.*', 10, 1682)
+autocmd WinLeave * call matchdelete(1682)
 augroup END
 " Logic for customizing the User1 highlight group is the following
 " - if StatusLine colors are reverse, then User1 is not reverse and User1 fg = StatusLine fg
@@ -385,10 +412,10 @@ set shortmess+=c
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
 if has("nvim-0.5.0") || has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
+" Recently vim can merge signcolumn and number column into one
+set signcolumn=number
 else
-  set signcolumn=yes
+set signcolumn=yes
 endif
 
 
@@ -398,8 +425,8 @@ endif
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+let col = col('.') - 1
+return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 
@@ -416,26 +443,190 @@ nnoremap <leader>br :call BuildProjectCpp()<CR><CR><CR>
 nnoremap <leader>cr :call CompileProjectCpp()<CR><CR><CR>
 
 function BuildProjectCpp()
-    execute ':!tmux send-keys -t 2 "cd /home/farka01/Desktop/working/REO_BACKEND && ./build_linux.sh && build/Release/bin/RDC4.0" ENTER'
+execute ':!tmux send-keys -t 2 "cd /home/farka01/Desktop/working/REO_BACKEND && ./build_linux.sh && build/Release/bin/RDC4.0" ENTER'
 endfunction
 
 function CompileProjectCpp()
-    let workingrelease='/home/farka01/Desktop/working/REO_BACKEND/build/Release'
-    let execPath="/home/farka01/Desktop/working/REO_BACKEND/build/Release/bin/RDC4.0"
-    silent execute ':!tmux send-keys -t 2 C-c ENTER'
-    silent execute ':!tmux send-keys -t 2 "clear" ENTER'
-    execute ':!tmux send-keys -t 2 "cd ' . workingrelease . ' && make && ' .  execPath . ' " ENTER'
+let workingrelease='/home/farka01/Desktop/working/REO_BACKEND/build/Release'
+let execPath="/home/farka01/Desktop/working/REO_BACKEND/build/Release/bin/RDC4.0"
+silent execute ':!tmux send-keys -t 2 C-c ENTER'
+silent execute ':!tmux send-keys -t 2 "clear" ENTER'
+execute ':!tmux send-keys -t 2 "cd ' . workingrelease . ' && make && ' .  execPath . ' " ENTER'
 endfunction
 
 function BuildProjectCpp1()
-    " session=whatever
-    session=1
-    window=${session}:0
-    pane=${window}.2
-    execute ':!tmux send-keys -t "$pane" C-z ''echo "abdlillah farka"'' Enter'
-    execute ':!tmux select-pane -t "$pane"'
-    execute ':!tmux select-window -t "$window"'
-    execute ':!tmux atach-session -t "$session"'
-    " command! :w!
-    " execute ':!tmux run-shell -b -t 2 ''cd /home/farka01/Desktop/working/REO_BACKEND && ./build_linux.sh && cd build/Debug/bind && ./RDC4.0'' '
+" session=whatever
+session=1
+window=${session}:0
+pane=${window}.2
+execute ':!tmux send-keys -t "$pane" C-z ''echo "abdlillah farka"'' Enter'
+execute ':!tmux select-pane -t "$pane"'
+execute ':!tmux select-window -t "$window"'
+execute ':!tmux atach-session -t "$session"'
+" command! :w!
+" execute ':!tmux run-shell -b -t 2 ''cd /home/farka01/Desktop/working/REO_BACKEND && ./build_linux.sh && cd build/Debug/bind && ./RDC4.0'' '
 endfunction
+" for rust
+
+" let g:rustfmt_autosave = 1
+" let g:rustfmt_emit_files = 1
+" let g:rustfmt_fail_silently = 0
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+"
+" nnoremap S :%s///cg<Left><Left><Left> 
+
+  " Füge diese Zeilen zu deiner ~/.vimrc oder ~/.config/nvim/init.vim hinzu
+
+" " Zum Wechseln zwischen TypeScript- und HTML-Dateien
+" function! ToggleTypeScriptHtml()
+"   let l:current_file = expand('%:p')
+"   if l:current_file =~# '\.ts$'
+"     execute 'edit' substitute(l:current_file, '\.ts$', '.html', '')
+"   elseif l:current_file =~# '\.html$'
+"     execute 'edit' substitute(l:current_file, '\.html$', '.ts', '')
+"   endif
+" endfunction
+
+" Tastenkombination zum Aufrufen der Funktion
+nnoremap <Space><Space> :call ToggleTypeScriptHtmlOrCppHeader()<CR>
+
+function! ToggleTypeScriptHtmlOrCppHeader()
+  let l:current_file = expand('%:p')
+  if l:current_file =~# '\.ts$' || l:current_file =~# '\.html$'
+    call ToggleTypeScriptHtml()
+  elseif l:current_file =~# '\.cpp$' || l:current_file =~# '\.h$' || l:current_file =~# '\.hpp$'
+    call ToggleCppHeader()
+  endif
+endfunction
+
+nnoremap <Space><Space> :call ToggleTypeScriptHtmlOrCppHeader()<CR>
+
+function! ToggleTypeScriptHtml()
+  let l:current_file = expand('%:p')
+  if l:current_file =~# '\.ts$'
+    execute 'edit' substitute(l:current_file, '\.ts$', '.html', '')
+  elseif l:current_file =~# '\.html$'
+    execute 'edit' substitute(l:current_file, '\.html$', '.ts', '')
+  endif
+endfunction
+
+function! ToggleCppHeader()
+  let l:current_file = expand('%:p')
+  if l:current_file =~# '\.cpp$'
+    execute 'edit' substitute(l:current_file, '\.cpp$', '.h', '')
+  elseif l:current_file =~# '\.h$'
+    execute 'edit' substitute(l:current_file, '\.h$', '.cpp', '')
+  elseif l:current_file =~# '\.hpp$'
+    execute 'edit' substitute(l:current_file, '\.hpp$', '.cpp', '')
+  endif
+endfunction
+let g:id_counter = 1
+
+function! IncrementId()
+  let g:id_counter = g:id_counter + 1
+  return g:id_counter
+endfunction
+
+
+function! RenumberBuffersAlphabetically()
+    " Holen Sie sich die Liste der Buffer mit alphabetischen Dateinamen
+    let bufList = []
+
+    " Iteriere über die Buffer
+    for i in range(1, bufnr('$'))
+        " Füge nur gelistete Buffer ohne netrw hinzu
+        if buflisted(i) && getbufvar(i, "&filetype") != 'netrw'
+            call add(bufList, fnamemodify(bufname(i), ':t'))
+        endif
+    endfor
+
+    " Sortiere die Bufferliste alphabetisch
+    let bufList = sort(bufList)
+
+    " Schließe alle Buffer, außer dem aktuellen
+    silent execute 'bwipeout! ' . join(filter(range(1, bufnr('$')), 'buflisted(v:val) && getbufvar(v:val, "&filetype") != "netrw" && v:val != bufnr("")'), ' ')
+
+
+    " Öffne die Buffer jn der neuen Reihenfolge
+    let i = 1
+    for buf in bufList
+        execute 'badd ' . i . ' ' . buf
+        let i+=1
+    endfor
+endfunction
+
+" Tastenkombination für das Skript
+nnoremap <leader>ra :call RenumberBuffersAlphabetically()<CR>
+
+
+function! GoToOuterBlock()
+    let l:cur_line = line('.')
+    let l:cur_col = col('.')
+    normal! [
+    let l:start_line = line('.')
+    let l:start_col = col('.')
+    normal! ]
+    let l:level = 0
+    while l:level >= 0
+        let l:cur_char = getline('.')[col('.') - 1]
+        if l:cur_char == '{'
+            let l:level = l:level + 1
+        elseif l:cur_char == '}'
+            let l:level = l:level - 1
+        endif
+        normal! %
+    endwhile
+    let l:end_line = line('.')
+    let l:end_col = col('.')
+    if l:start_line != l:end_line || l:start_col != l:end_col
+        call cursor(l:cur_line, l:cur_col)
+    endif
+endfunction
+
+nnoremap <F8> :call GoToOuterBlock()<CR>
+" Clang-format für C++-Dateien
+autocmd FileType cpp nnoremap <buffer> <F3> :%!clang-format<CR>
+" Astyle für C++-Dateien
+autocmd FileType cpp nnoremap <buffer> <F4> :%!astyle<CR>
+" golang
+" disable all linters as that is taken care of by coc.nvim
+" let g:go_diagnostics_enabled = 0
+" let g:go_metalinter_enabled = []
+
+" " don't jump to errors after metalinter is invoked
+" let g:go_jump_to_error = 0
+
+" " run go imports on file save
+" let g:go_fmt_command = "goimports"
+
+" " automatically highlight variable your cursor is on
+" let g:go_auto_sameids = 0
+" let g:go_highlight_types = 1
+" let g:go_highlight_fields = 1
+" let g:go_highlight_functions = 1
+" let g:go_highlight_function_calls = 1
+" let g:go_highlight_operators = 1
+" let g:go_highlight_extra_types = 1
+" let g:go_highlight_build_constraints = 1
+" let g:go_highlight_generate_tags = 1
